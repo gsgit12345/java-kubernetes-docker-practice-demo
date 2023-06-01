@@ -1,0 +1,77 @@
+docker info
+
+service dockr status
+
+service docker start  or systemctl start docker     //Redirecting to /bin/systemctl start docker.service
+docker version
+
+docker ps -a  ===all running container
+
+docker --help  it shows the all module in docker
+docker ps ==old way
+docker container ps   ==container is module in docker and ls is child module
+docker image ls    ==same as above
+docker network ls
+
+docker container run ubuntu    cat /etc/os-release   :-it is creating a container and running a container within container
+docker container ls -a   ==it will show exit status container along with command
+docker container run sleep 30 ==after 30 seconds container will exit
+docker container rm "containerid"   it will remove the container.it is not mandatory that take whole name of container you can starting 2 or 4 digit
+docker container rm "containerid" "containerid"    remove two container
+docker container start "containerid"
+docker container stop "containerid"
+docker container run -d ubuntu sleep 30    ==running container in background -d =detached
+docker container run -d  -it ubuntu /bin/bash    ==running container in interactive mode and will exit
+docker container run   -it ubuntu /bin/bash   ==running container in interactive mode and will not exit
+ctrl+pq :-it will not exit container.you will be outside of container.
+
+docker container ls -aq    =it will show id of the all container
+docker container rm $(docker container ls -aq)
+docker container inspect "containerid"
+docker container logs "containerid"
+docker container top "containerid"   -to see the all process running in the container
+
+ps -aux   :-show the all process running in the container
+docker container stats  -it will show all memory usage etc.
+ifconfig   --it will show the systemip
+docker container run -d -p 3600:80 --name test nginx    ==port forwarding.It means whatever request you are getting on system ip(192.168.146.238) and port 3600
+you will be redirected to nginx ip and port .http://192.168.146.238:3600/ --here system ip and port
+netstat -nltp       ==it will show the ip address and port
+docker container exec -it "containerid" /bin/bash      :-exec command will run last command within container
+
+docker container rename 9e522e7b821f tiger     ==it will rename the container name.
+docker container restart "containerid"
+docker container attach "containerid"   :-it will push container in foreground and it will print the logs when you will try to access.
+docker container run -itd 99bc /bin/bash   :-running container in background
+docker container kill "contanerid"
+docker container wait               ==it will wait that container will stop and will return 0
+docker container stop "containerid"
+docker container pause "f600489c69da"
+docker container unpause "containerid"
+docker container prune -f  ==-f cause not to show confirmation window
+docker container port "containername"
+docker container create nginx  sleep 30   :-diff. between run and create .run=create+run
+docker container diff "containerid"    it will show the changed file
+docker container cp "sourcedir" "containerid:/dirname/"  ==you can copy the file in container
+docker container export "containerid" >ubuntu.tar  :-exporting containefrdocker
+ docker image import ubuntu.tar  my_ubuntu
+ docker container run -it my_ubuntu /bin/bash
+ docker container commit --author "ghanshyam shukla" -m "this is the test commit" c230ce951a43  my_test_image    ==this command is used to commit the created in container
+ docker container run -i -t my_test_image /bin/bash   :-then run the image as container and you will find created file
+
+ docker image tag  "image_name" hub.docker.com/gshukla123/"image_name"  :-it will tag the image
+ docker    push gshukla123/"image_name"
+docker image ls --format '{{.ID}} , {{.Repository}}'    :=it will display all image along with id and repository https://docs.docker.com/config/formatting/
+docker image history nginx  :-it will show the image history
+docker images rm image1,image2    :--will remove the image
+docker image rm -f image   :- it will remove forcefully
+docker image inspect "imagename"
+docker image save publish-docker-image-to-docker-hub >savedemo.tar  :-it will save layer by layer.
+docker image load <savedemo.tar
+docker container save   :-there is no layer and volume mounts
+docker image import
+[iid@iid dockerfile]$ docker image build -t myubuntudemo:1 .    :-creating the image
+[iid@iid dockerfile]$ docker image ls -a|wc                    shows the number of line in docker file
+
+cat -n Dockerfile   ==will show number of line in docker file
+https://www.baeldung.com/ops/multiple-dockerfiles
