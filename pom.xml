@@ -13,6 +13,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <packaging>pom</packaging>
 <modules>
     <module>demo-practice-docker-tutorial</module>
+    <module>demo-practice-java</module>
 </modules>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
