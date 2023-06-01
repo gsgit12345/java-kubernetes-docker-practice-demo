@@ -75,3 +75,17 @@ docker image import
 
 cat -n Dockerfile   ==will show number of line in docker file
 https://www.baeldung.com/ops/multiple-dockerfiles
+
+docker image inspect "imagename"   :-to see the image content
+
+env   :-to see the environment variable run container and run env command
+
+Difference between copy and add command
+
+docker image build -t myimg:1 .   :-this build the image
+[iid@iid dockersh]$ docker container  run -P -itd  myimg:1      here -P means it will assign a port to container
+
+#do ssh iid@172.17.0.7  and pres enter and provide password pass123
+# 192.168.146.241  =this is machine ip
+#[iid@iid dockersh]$ ssh  iid@192.168.146.241 -p  32768   :-this  iid is user and 192.168.146.241 machine ip and 32768 is the exposed port
+#[iid@iid dockersh]$ ssh  iid2@192.168.146.241 -p  32768   :-this  iid is user which is above  and 192.168.146.241 machine ip and 32768 is the exposed port
