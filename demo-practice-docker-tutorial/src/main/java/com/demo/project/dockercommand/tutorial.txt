@@ -89,3 +89,119 @@ docker image build -t myimg:1 .   :-this build the image
 # 192.168.146.241  =this is machine ip
 #[iid@iid dockersh]$ ssh  iid@192.168.146.241 -p  32768   :-this  iid is user and 192.168.146.241 machine ip and 32768 is the exposed port
 #[iid@iid dockersh]$ ssh  iid2@192.168.146.241 -p  32768   :-this  iid is user which is above  and 192.168.146.241 machine ip and 32768 is the exposed port
+
+Persisting data in the docker
+1-Using Volume
+2-Using bind mount
+
+
+tmpfs mount
+
+docker volume ls
+[iid@iid entrypoint]$ docker container  run --name mysql -e MYSQL_ALLOW_EMPTY_PASSWORD=true mysql
+/var/lib/mysql
+
+[iid@iid dockervolume]$ docker  inspect "imageid"
+[iid@iid dockervolume]$ docker volume inspect "volumeid"
+[iid@iid dockervolume]$ docker container exec -it 0092b6ce7b22 bash
+[iid@iid dockervolume]$ docker container run --name mysqlll -itd -v 138351eb56be4079ae1599f36e186e31eb06e834290fbea507f604b839db580e:/var/lib/mysql mysql
+the above command attached the existing volume  to new container.and in this way you can persist the data created in the previous container
+[iid@iid dockervolume]$ docker container run -d  --name mysqltest -v demo_volume:/var/lib/mysql -e MYSQL_ALLOW_EMPTY_PASSWORD mysql
+running container with volume
+
+bind mount
+
+[iid@iid dockervolume]$ docker container run  -it -v /home/iid/shareddocker:/tmp/test/ ubuntu:14.04
+
+the above command map the host machine folder into the container and always provide the full path
+
+[iid@iid dockervolume]$ docker container run  -it -v $(pwd):/tmp/test/ ubuntu:14.04  :-it will what pwd command will return
+[iid@iid dockervolume]$  docker container run  -it --mount type=bind,source=/home/iid/shareddocker,target=/tmp/test/ ubuntu:14.04 bash
+the above command also create the binding of folder of host with container
+
+====docker networking ======================
+[iid@iid dockervolume]$ docker network ls
+[iid@iid dockervolume]$ docker network inspect bridge
+[iid@iid dockervolume]$  docker container run  -itd  --name mying  nginx:latest
+[iid@iid dockervolume]$  docker container run  -itd  --name myubuntu  ubuntu:14.04 bash
+[iid@iid dockervolume]$ docker network create -d bridge test
+[iid@iid dockervolume]$ docker container run -it --name hellonetwork1 --network test nginx:latest  bash
+root@f3a87f53e7cd:/# wget 192.168.146.242:32768
+ :-- install the wget first  here i had access the container from another network.I have to network one is default and another one test
+.I had deployed the nginx in test network and ubuntu in default network .Now i had open the port of ingnx and had access in ubuntu using the machine ip of
+the host:port .32768 is the port of ingnx in test network and 192.168.146.242 is ip of the host machine.To create scenario you create 2 container in test network and
+one container in default.try to ping container which is in test network.
+
+note :-if you are creating a network then DNS automatically would be enable.but the network provided by the docker you would not find dns enable.
+but if you want that if you create a container and DNS would be enable by default.Delete the docker network and create same network with driver bridge
+and name with bridge.in this way all containe get enabled dns.
+host(network} ----eth0 ---docker0-----dockercontainer
+
+
+how to ping by hostname in a container.
+
+====host networking =====================================
+here if you are giving network=host while creating container the this is not isolated.it will use host network.so do not requre to map the port etxc
+but other process would be isolated.
+
+===========creating container which does not assign to any network======================
+[iid@iid entrypoint]$ docker container run -it  --name nonenetwork1 --network=none  ubuntu:14.04 bash
+
+===attaching two network with a container=======
+[iid@iid entrypoint]$ docker container run -it  --name nonenetwork2 --network=bridge  ubuntu:14.04 bash
+[iid@iid java-kubernetes-docker-practice-demo]$ docker network connect test 68007f9367de
+[iid@iid java-kubernetes-docker-practice-demo]$ docker network disconnect test 68007f9367de
+
+docker network rm test   :-removing network
+docker network prune  :-removing network
+
+=====================docker registry=============================
+[iid@iid java-kubernetes-docker-practice-demo]$ docker run -d -p 5000:5000 --name registry registry:latest
+http://localhost:5000/v2/_catalog
+[iid@iid java-kubernetes-docker-practice-demo]$ docker image tag mysql:latest 127.0.0.1:5000/mysql:latest
+[iid@iid java-kubernetes-docker-practice-demo]$ docker image push 127.0.0.1:5000/mysql:latest
+docker image pull  127.0.0.0:5000/nginx:latest   ==it pull download from the local repository
+
+======================configuring insecure registry =========================
+create file daemon.json
+{
+"insecure-registries" : [ipaddress:portnumber of registry]
+}
+and move the file in the below location
+/etc/docker/
+
+===========================setting up docker registry ====================
+[iid@iid java-kubernetes-docker-practice-demo]$ docker container stop 1eb6c7e49bf3    ==stop the local registry
+>>openssl req -newkey rsa:4096 -nodes -sha256 -keyout certs/domain.key -x509 -days 365 -out certs/domain.cert
+press enter
+for all occurance but fill
+your name or your server name :-  repo.docker.local  :-it can be any name
+
+make folder in /etc/docker/
+mkdir certs.d
+cd certs.d
+mkdir docker.rep.local:5000
+
+cp certs/domain.cert /etc/docker/certs.d/repo.docker.local\:5000/ca.cert
+service docker restart
+
+docker container run -d -p 5000:5000 --name secure_registry -v $(pwd)/certs/:/certs/ -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt -e  REGISTRY_HTTP_TLS_KEY
+=/certs/domain.key  registry
+here we are mounting the certificate along with environment in containers :/certs  directory
+now try to push in repository
+docker image tag nginx repo.docker.local:5000/nginx
+docker image push  repo.docker.local:5000/nginx
+make the entry in /etc/hosts
+
+192.168.146.242   docker.repo.local      :-ip address of the registry host. in this case given ip is the hosts,machine  ip
+
+
+
+
+then you will find two nic interface attached to container if you run the ipconfig
+
+
+
+
+
+

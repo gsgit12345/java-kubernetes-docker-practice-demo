@@ -1,0 +1,1 @@
+[iid@iid dockervolume]$ docker container run  -it -v /home/iid/shareddocker:/tmp/test/ ubuntu:14.04
