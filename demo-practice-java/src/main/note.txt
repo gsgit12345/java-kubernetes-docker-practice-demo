@@ -1,2 +1,54 @@
 
 https://codingbat.com/java
+
+question:-why java 8
+Ans:-Significant reason to introduce java8 is the conciseness of the code
+java 8 had introduce functional programming which enabled by lambda expression and it is the powerfull tool to create concise code base.
+
+features
+1-lambda expression and functional programming
+2-Stream Api
+3-Default method in interface
+4-static method
+5-functioanl interface
+6-optional
+7-method references
+8-Date Api
+9-Nashron ,javascript engine.
+
+Advantage of java 8
+
+1-We can create concise code and less boiler plate code.means no redundate code.
+2-more readable and more reusable code
+3-more testable code
+4-parallel operations
+
+que:-what is lambda expression
+ans:-Lambda expression is the anonymous function (without name,access modifier and return type) having one lambda symbol or operator
+normally in conventional java we wrote
+public void sayHello(int a,int b)
+{
+System.out.println(a+b)
+}
+same we can wrote
+(a,b)-> System.out.println(a+b);    :-this shorten the code.this is called concise code.
+
+BiConsumer:-it takes two argument of similar kind of object and does not return value.it performs only operation
+question:-what is functional interface
+ans:-Functional interfaces are those interfaces which have only one abstract method.it can have any static method,default method and no restrictions on that
+there are many java function interface present already such as Comparable,Runnable
+LongUnaryOperator and UnaryOperator:-both works on single value operand.but first works on long value and second works on the non-long value like primitive
+
+Method reference:- :: this is the method reference which is used to refer the method of functional interface.it came in java for code reusability
+Default method:-default method is a way for adding new method in the interface without affecting the implementation class.The use of default method is backward
+compatibility.
+Diamond Problem:--if two implemented interfaces contains same default methods then that is the diamond problem
+Quest:-Are static method available to implementing classes by default
+Ans:-Static methods are not available to implementing classes.hence you can call static methods in class using interfacename.methodname.
+Predicate:-it is functional interface and it is used to test some boolean  condition.it return boolean value always .It provides code reusability
+quest:-What is predicate joining
+Ans:-three ways to join
+And(),Or(),Negate()
+Function:-It takes one argument and performs some operation and returns any value of any type
+Consumer:-It takes only input but it does not return anything.
+Suplier:-it will always provide a value or object to the user.it does not take any input.
